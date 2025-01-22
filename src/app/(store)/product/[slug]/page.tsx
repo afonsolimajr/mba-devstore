@@ -1,11 +1,37 @@
+import { api } from "@/data/api";
+import { Product } from "@/data/types/product";
 import Image from "next/image";
 
-export default function ProductPage() {
+interface ProductProps {
+  params: { slug: string };
+}
+
+async function getProduct(slug: string): Promise<Product> {
+  const response = await api(`/products/${slug}`, {
+    next: {
+      revalidate: 60 * 60,
+    },
+  });
+
+  const product = await response.json();
+
+  return product;
+}
+
+export default async function ProductPage({ params }: ProductProps) {
+  const product = await getProduct(params.slug);
+  const divPrice = product.price / 12;
+  const formatedPrice = divPrice.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    maximumFractionDigits: 2,
+  });
+
   return (
     <div className="relative grid max-h-[860px] grid-cols-3">
       <div className="col-span-2 overflow-hidden">
         <Image
-          src="/moletom-never-stop-learning.png"
+          src={product.image}
           alt=""
           width={1000}
           height={1000}
@@ -14,17 +40,22 @@ export default function ProductPage() {
       </div>
 
       <div className="flex flex-col justify-center px-12">
-        <h1 className="text-3xl font-bold leading-tight">Titulo do produto</h1>
+        <h1 className="text-3xl font-bold leading-tight">{product.title}</h1>
         <p className="mt-2 leading-relaxed text-zinc-400">
-          Descrção do produto
+          {product.description}
         </p>
 
         <div className="mt-8 flex items-center gap-3">
           <span className="inline-block rounded-full bg-violet-500 px-5 py-2.5 font-semibold">
-            R$ 0,00
+            {product.price.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
           </span>
           <span className="text-sm text-zinc-400">
-            Em 12x s/juros de R$0,00
+            {`Em 12x s/juros de ${formatedPrice}`}
           </span>
         </div>
 
