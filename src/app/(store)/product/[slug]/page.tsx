@@ -1,17 +1,22 @@
 import { api } from "@/data/api";
 import { Product } from "@/data/types/product";
+import { error } from "console";
 import Image from "next/image";
 
 interface ProductProps {
   params: { slug: string };
 }
 
-async function getProduct(slug: string): Promise<Product> {
+async function getProduct(slug: string): Promise<Product | undefined> {
   const response = await api(`/products/${slug}`, {
     next: {
       revalidate: 60 * 60,
     },
   });
+
+  if (response.status == 400) {
+    return undefined;
+  }
 
   const product = await response.json();
 
@@ -20,6 +25,16 @@ async function getProduct(slug: string): Promise<Product> {
 
 export default async function ProductPage({ params }: ProductProps) {
   const product = await getProduct(params.slug);
+
+  console.log(product);
+
+  if (!product) {
+    return (
+      <div>
+        <h1>Product not Found</h1>
+      </div>
+    );
+  }
   const divPrice = product.price / 12;
   const formatedPrice = divPrice.toLocaleString("pt-BR", {
     style: "currency",
