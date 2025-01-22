@@ -1,7 +1,9 @@
 import { api } from "@/data/api";
 import { Product } from "@/data/types/product";
 import { error } from "console";
+import { Metadata } from "next";
 import Image from "next/image";
+import { title } from "process";
 
 interface ProductProps {
   params: { slug: string };
@@ -23,10 +25,18 @@ async function getProduct(slug: string): Promise<Product | undefined> {
   return product;
 }
 
-export default async function ProductPage({ params }: ProductProps) {
+export async function generateMetadata({
+  params,
+}: ProductProps): Promise<Metadata> {
   const product = await getProduct(params.slug);
 
-  console.log(product);
+  return {
+    title: product?.title,
+  };
+}
+
+export default async function ProductPage({ params }: ProductProps) {
+  const product = await getProduct(params.slug);
 
   if (!product) {
     return (
