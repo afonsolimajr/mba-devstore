@@ -2,10 +2,21 @@ import { api } from "@/data/api";
 import { Product } from "@/data/types/product";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default async function Search() {
+interface SearchProps {
+  searchParams: { q: string };
+}
+
+export default async function Search({ searchParams }: SearchProps) {
+  const query = searchParams.q;
+
+  if (!query) {
+    redirect("/");
+  }
+
   async function getProducts(): Promise<Product[]> {
-    const response = await api(`/products/search?q=${""}`, {
+    const response = await api(`/products/search?q=${query}`, {
       next: {
         revalidate: 60 * 60,
       },
@@ -17,12 +28,11 @@ export default async function Search() {
   }
 
   const products: Product[] = await getProducts();
-  console.log("search", products);
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <p className="text-sm">
-        Resultados para: <span className="font-semibold">pesquisa</span>
+        Resultados para: <span className="font-semibold">{query}</span>
       </p>
       <div className="grid grid-cols-3 gap-6">
         {products.map((product) => {
