@@ -16,7 +16,7 @@ export default async function Search({ searchParams }: SearchProps) {
   }
 
   async function getProducts(): Promise<Product[]> {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
     const response = await api(`/products/search?q=${query}`, {
       next: {
         revalidate: 60 * 60,
