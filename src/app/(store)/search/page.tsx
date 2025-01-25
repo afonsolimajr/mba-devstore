@@ -1,3 +1,4 @@
+import PriceTag from "@/components/price-tag";
 import { api } from "@/data/api";
 import { Product } from "@/data/types/product";
 import Image from "next/image";
@@ -35,7 +36,7 @@ export default async function Search({ searchParams }: SearchProps) {
       <p className="text-sm">
         Resultados para: <span className="font-semibold">{query}</span>
       </p>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {products.map((product) => {
           return (
             <Link
@@ -52,17 +53,18 @@ export default async function Search({ searchParams }: SearchProps) {
                 quality={100}
               />
 
-              <div className="absolute bottom-10 right-10 h-12 flex items-center gap-2 max-w-[280px] rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
-                <span className="text-sm truncate">{product.title}</span>
-                <span className="flex h-full items-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
-                  {product.price.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  })}
-                </span>
-              </div>
+              <PriceTag product={product} small />
+              {/* <div className="absolute bottom-10 right-10 h-12 flex items-center gap-2 max-w-[280px] rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
+                 <span className="text-sm truncate">{product.title}</span>
+                 <span className="flex h-full items-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
+                   {product.price.toLocaleString("pt-BR", {
+                     style: "currency",
+                     currency: "BRL",
+                     minimumFractionDigits: 0,
+                     maximumFractionDigits: 0,
+                   })}
+                 </span>
+               </div> */}
             </Link>
           );
         })}
