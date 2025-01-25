@@ -60,7 +60,7 @@ export default async function Home() {
               quality={100}
             />
 
-            <PriceTag product={product} small />
+            <PriceTag product={product} small mini />
           </Link>
         );
       })}

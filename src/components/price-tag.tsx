@@ -3,9 +3,11 @@ import { Product } from "@/data/types/product";
 export default function PriceTag({
   product,
   small,
+  mini,
 }: {
   product: Product;
   small?: boolean;
+  mini?: boolean;
 }) {
   const bottom = small ? "bottom-4 md:bottom-10" : "bottom-8 md:bottom-28";
   const right = small ? "right-4 md:right-8" : "right-4 md:right-28";
@@ -14,7 +16,7 @@ export default function PriceTag({
     <div
       className={
         small
-          ? `absolute ${bottom} ${right} h-8 sm:h-12 flex items-center gap-2 max-w-28 md:max-w-72 rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5`
+          ? `absolute ${bottom} ${right} h-8 sm:h-12 flex items-center gap-2 ${mini ? "max-w-28" : "max-w-52"} md:max-w-72 rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5`
           : `absolute ${bottom} ${right} h-12 sm:h-16 flex items-center gap-2 max-w-64 sm:max-w-72 rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5`
       }
     >
